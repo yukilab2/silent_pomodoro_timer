@@ -1,152 +1,151 @@
 name: Release Build
 
 on:
-  push:
-    tags:
-      - 'v*'
+    push:
+        tags:
+            - "release-*"
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    build-macos:
+        runs-on: macos-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+            - name: Setup Rust
+              uses: dtolnay/rust-toolchain@stable
 
-      - name: Cache Cargo dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+            - name: Cache Cargo dependencies
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/bin/
+                      ~/.cargo/registry/index/
+                      ~/.cargo/registry/cache/
+                      ~/.cargo/git/db/
+                      target/
+                  key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-cargo-
 
-      - name: Build release binary
-        run: cargo build --release
+            - name: Build release binary
+              run: cargo build --release
 
-      - name: Create .app bundle
-        run: |
-          chmod +x build-macos-app.sh
-          ./build-macos-app.sh
+            - name: Create .app bundle
+              run: |
+                  chmod +x build-macos-app.sh
+                  ./build-macos-app.sh
 
-      - name: Create ZIP archive
-        run: |
-          cd target
-          zip -r pomodoro-timer-${{ github.ref_name }}-macos.zip PomodoroTimer.app
+            - name: Create ZIP archive
+              run: |
+                  cd target
+                  zip -r pomodoro-timer-${{ github.ref_name }}-macos.zip PomodoroTimer.app
 
-      - name: Upload macOS artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-build
-          path: target/pomodoro-timer-${{ github.ref_name }}-macos.zip
+            - name: Upload macOS artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: macos-build
+                  path: target/pomodoro-timer-${{ github.ref_name }}-macos.zip
 
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    build-windows:
+        runs-on: windows-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: x86_64-pc-windows-msvc
+            - name: Setup Rust
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  targets: x86_64-pc-windows-msvc
 
-      - name: Cache Cargo dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+            - name: Cache Cargo dependencies
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/bin/
+                      ~/.cargo/registry/index/
+                      ~/.cargo/registry/cache/
+                      ~/.cargo/git/db/
+                      target/
+                  key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-cargo-
 
-      - name: Build release binary
-        run: cargo build --release --target x86_64-pc-windows-msvc
+            - name: Build release binary
+              run: cargo build --release --target x86_64-pc-windows-msvc
 
-      - name: Create ZIP archive
-        run: |
-          Compress-Archive -Path target\x86_64-pc-windows-msvc\release\pomodoro_timer.exe -DestinationPath pomodoro-timer-${{ github.ref_name }}-windows.zip
+            - name: Create ZIP archive
+              run: |
+                  Compress-Archive -Path target\x86_64-pc-windows-msvc\release\pomodoro_timer.exe -DestinationPath pomodoro-timer-${{ github.ref_name }}-windows.zip
 
-      - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-build
-          path: pomodoro-timer-${{ github.ref_name }}-windows.zip
+            - name: Upload Windows artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: windows-build
+                  path: pomodoro-timer-${{ github.ref_name }}-windows.zip
 
-  build-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    build-linux:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libasound2-dev
+            - name: Install dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libasound2-dev
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: x86_64-unknown-linux-gnu
+            - name: Setup Rust
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  targets: x86_64-unknown-linux-gnu
 
-      - name: Cache Cargo dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+            - name: Cache Cargo dependencies
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/bin/
+                      ~/.cargo/registry/index/
+                      ~/.cargo/registry/cache/
+                      ~/.cargo/git/db/
+                      target/
+                  key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-cargo-
 
-      - name: Build release binary
-        run: cargo build --release --target x86_64-unknown-linux-gnu
+            - name: Build release binary
+              run: cargo build --release --target x86_64-unknown-linux-gnu
 
-      - name: Create tarball
-        run: |
-          tar czf pomodoro-timer-${{ github.ref_name }}-linux.tar.gz -C target/x86_64-unknown-linux-gnu/release pomodoro_timer
+            - name: Create tarball
+              run: |
+                  tar czf pomodoro-timer-${{ github.ref_name }}-linux.tar.gz -C target/x86_64-unknown-linux-gnu/release pomodoro_timer
 
-      - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-build
-          path: pomodoro-timer-${{ github.ref_name }}-linux.tar.gz
+            - name: Upload Linux artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: linux-build
+                  path: pomodoro-timer-${{ github.ref_name }}-linux.tar.gz
 
-  release:
-    needs: [build-macos, build-windows, build-linux]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    release:
+        needs: [build-macos, build-windows, build-linux]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ./artifacts
+            - name: Download all artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  path: ./artifacts
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          files: |
-            artifacts/**/*
-          draft: false
-          prerelease: false
-
+            - name: Create Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ github.ref_name }}
+                  name: Release ${{ github.ref_name }}
+                  files: |
+                      artifacts/**/*
+                  draft: false
+                  prerelease: false
