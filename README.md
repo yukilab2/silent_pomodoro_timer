@@ -99,7 +99,14 @@ cargo build --release --target x86_64-unknown-linux-gnu
 #### macOS
 
 ```bash
+# リリースビルド（バイナリのみ）
 cargo build --release
+
+# macOS .appバンドルの作成（ターミナルを開かないGUIアプリ）
+./build-macos-app.sh
+
+# 作成された.appバンドルをApplicationsフォルダにコピー
+cp -r target/PomodoroTimer.app /Applications/
 ```
 
 #### Linux

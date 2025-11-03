@@ -105,7 +105,7 @@ impl eframe::App for PomodoroApp {
                         ui.separator();
                         
                         ui.label("Flash Color:");
-                        egui::ComboBox::from_id_source("flash_color")
+                        egui::ComboBox::from_id_salt("flash_color")
                             .selected_text(format!("{:?}", self.settings.flash_color))
                             .show_ui(ui, |ui| {
                                 ui.selectable_value(&mut self.settings.flash_color, FlashColor::White, "White");
@@ -141,7 +141,7 @@ impl eframe::App for PomodoroApp {
 
         // 中央のボタン領域
         egui::CentralPanel::default()
-            .frame(egui::Frame::none())
+            .frame(egui::Frame::NONE)
             .show(ctx, |ui| {
                 let button_rect = ui.max_rect();
                 

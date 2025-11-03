@@ -17,7 +17,7 @@ fn main() -> eframe::Result<()> {
         options,
         Box::new(|_cc| {
             let app = PomodoroApp::new();
-            Box::new(app)
+            Ok(Box::new(app))
         }),
     )
 }
