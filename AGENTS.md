@@ -11,7 +11,7 @@ Pomodoro timer without sound.   Timeout is notified by visual feedback.
 5) ボタンを押すとフラッシュが止まり、25分のタイマーが開始します。 (->2に戻る)
 
 - ボタンはwindowいっぱいの大きさ
-- フラッシュの色は選択できる。 白/黒 など
+- フラッシュの色は選択できる。 白/黒/赤/青/緑
 - フラッシュする領域はボタンの背景
 - 25分・5分の計測中は秒単位で残り時間がボタンに表示される。
 
@@ -39,5 +39,5 @@ Pomodoro timer without sound.   Timeout is notified by visual feedback.
 
 ### 技術要件
 
-- GUI: 
+- GUI:
 - 言語： rust
