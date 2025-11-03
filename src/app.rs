@@ -19,6 +19,7 @@ pub struct PomodoroApp {
     show_settings: bool,
     flash_phase: f32, // 0.0 ~ 1.0 でフラッシュの位相（0=暗い、1=明るい）
     last_update: instant::Instant,
+    button_hover_start_time: Option<instant::Instant>, // ボタンがホバーされ始めた時刻
 }
 
 impl PomodoroApp {
@@ -31,6 +32,7 @@ impl PomodoroApp {
             show_settings: false,
             flash_phase: 0.0,
             last_update: instant::Instant::now(),
+            button_hover_start_time: None,
         }
     }
 
@@ -169,6 +171,19 @@ impl eframe::App for PomodoroApp {
                 // 全画面クリック可能な領域（先に確保してクリックイベントを受け取る）
                 let button_response = ui.allocate_rect(button_rect, egui::Sense::click());
                 
+                // ホバー状態をトラッキング（フォーカスクリックを防ぐため）
+                let now = instant::Instant::now();
+                let is_hovered = button_response.hovered();
+                if is_hovered {
+                    // ホバーが始まった場合は時刻を記録
+                    if self.button_hover_start_time.is_none() {
+                        self.button_hover_start_time = Some(now);
+                    }
+                } else {
+                    // ホバーが終わった場合はリセット
+                    self.button_hover_start_time = None;
+                }
+                
                 // タイマー表示と状態表示を中央に配置（クリックをブロックしないようにpainterで直接描画）
                 let minutes = self.remaining_seconds / 60;
                 let seconds = self.remaining_seconds % 60;
@@ -220,7 +235,15 @@ impl eframe::App for PomodoroApp {
                     egui::Color32::WHITE,
                 );
                 
-                if button_response.clicked() {
+                // クリック処理：ホバー時間が十分長い場合のみ処理（フォーカスクリックを防ぐ）
+                let should_process_click = button_response.clicked()
+                    && self.button_hover_start_time
+                        .map(|hover_start| {
+                            now.duration_since(hover_start) >= std::time::Duration::from_millis(150)
+                        })
+                        .unwrap_or(false);
+                
+                if should_process_click {
                     match self.state {
                         TimerState::Waiting => {
                             self.state = TimerState::Working;
