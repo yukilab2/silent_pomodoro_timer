@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  pomodoro-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - cargo-cache:/usr/local/cargo/registry
+      - target-cache:/app/target
+      # macOS用のX11転送
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - DISPLAY=${DISPLAY:-host.docker.internal:0}
+      - XAUTHORITY=${XAUTHORITY:-}
+    # macOSではhostネットワークモードが使えないため、extra_hostsを使用
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+volumes:
+  cargo-cache:
+  target-cache:
+
