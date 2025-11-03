@@ -1,0 +1,54 @@
+# Pomodoro Timer
+
+> A Pomodoro timer application built with Rust and egui framework.
+> This project implements the Pomodoro Technique for time management,
+> allowing users to work in focused intervals with breaks.
+> No sound notifications - only visual feedback through window flashing.
+
+## Project Overview
+
+This is a desktop application that provides a Pomodoro timer functionality:
+
+- 25-minute work sessions (pomodoros)
+- 5-minute short breaks between sessions
+- Visual notifications only (no sound) - window flashing at timer completion
+- Configurable flash colors (white/black/red/blue/green)
+- Full-screen button interface
+- Settings persistence to `~/.config/pomodoro/settings.ini`
+- Clean, modern GUI built with egui
+
+## Technology Stack
+
+- **Language**: Rust
+- **GUI Framework**: egui
+- **Application Framework**: eframe
+- **Platform**: Cross-platform desktop application
+
+## Project Structure
+
+```text
+pomodoro_timer/
+├── src/
+│   ├── main.rs          # Application entry point
+│   ├── app.rs           # Main application state and logic
+│   └── settings.rs       # Settings management and persistence
+├── Cargo.toml           # Rust project dependencies
+└── README.md            # Project documentation
+```
+
+## Key Features
+
+- Timer functionality with 25-minute work and 5-minute break durations
+- Work/break cycle management with automatic transitions
+- Visual countdown display (MM:SS format)
+- Start/pause controls via full-screen button
+- Visual flashing notification at timer completion (no sound)
+- Configurable flash colors (white/black/red/blue/green)
+- Settings window with gear icon
+- Settings persistence to `~/.config/pomodoro/settings.ini`
+- Smooth 2-second fade-in, 2-second fade-out flash animation
+
+## Development Status
+
+Currently in development on the `develop` branch,
+with basic GUI structure and timer functionality implemented using egui/eframe.

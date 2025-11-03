@@ -1,6 +1,6 @@
 # ポモドーロタイマー
 
-視覚的なフィードバックで通知するポモドーロタイマーアプリケーション（音声なし）。
+視覚的なフィードバックで通知するポモドーロタイマーアプリケーション（通知音なし）。
 
 ## 機能
 
@@ -99,7 +99,14 @@ cargo build --release --target x86_64-unknown-linux-gnu
 #### macOS
 
 ```bash
+# リリースビルド（バイナリのみ）
 cargo build --release
+
+# macOS .appバンドルの作成（ターミナルを開かないGUIアプリ）
+./build-macos-app.sh
+
+# 作成された.appバンドルをApplicationsフォルダにコピー
+cp -r target/PomodoroTimer.app /Applications/
 ```
 
 #### Linux
@@ -138,6 +145,7 @@ cargo build --release --target x86_64-pc-windows-gnu
 ├── Dockerfile       # 本番用ビルド
 ├── Dockerfile.dev   # 開発用環境
 ├── docker-compose.yml
+├── build-macos-app.sh  # macOS .appバンドル作成スクリプト
 └── Cargo.toml
 ```
 
