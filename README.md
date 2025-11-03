@@ -155,6 +155,9 @@ cargo build --release --target x86_64-pc-windows-gnu
 - egui (GUIフレームワーク)
 - eframe (アプリケーションフレームワーク)
 
-## ライセンス
+## リリース
 
-（必要に応じて追加）
+```bash
+git tag release-1.0.0
+git push origin release-1.0.0
+```
