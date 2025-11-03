@@ -1,0 +1,15 @@
+[package]
+name = "pomodoro_timer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# macOSではネイティブバックエンドを使用（X11不要）
+# LinuxではX11を使用するが、macOSでは自動的にmacOSネイティブAPIを使用
+eframe = { version = "0.33", default-features = true, features = ["persistence"] }
+egui = "0.33"
+serde = { version = "1.0", features = ["derive"] }
+serde_ini = "0.2"
+directories = "6.0"
+instant = "0.1"
+
